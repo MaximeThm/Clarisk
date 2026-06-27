@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clarisk — {{ entreprise.nom_complet }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+    <div class="max-w-2xl mx-auto px-4 py-10">
+
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-8">
+            <a href="/" class="text-blue-600 font-bold text-xl">Clarisk</a>
+            <a href="/" class="text-sm text-gray-500 hover:underline">← Nouvelle recherche</a>
+        </div>
+
+        <!-- Nom entreprise -->
+        <h2 class="text-2xl font-bold text-gray-900 mb-1">
+            {{ entreprise.nom_complet or entreprise.nom_raison_sociale or "—" }}
+        </h2>
+        <p class="text-gray-500 text-sm mb-6">
+            SIREN : {{ entreprise.siren or "—" }}
+            {% if entreprise.siege and entreprise.siege.siret %}
+             · SIRET siège : {{ entreprise.siege.siret }}
+            {% endif %}
+        </p>
+
+        <!-- Score de risque -->
+        <div class="bg-white rounded-xl border border-gray-200 p-6 mb-6">
+            <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-4">Score de risque</h3>
+
+            <div class="flex items-center gap-6">
+                <div class="text-5xl font-bold
+                    {% if risque.couleur == 'red' %}text-red-500
+                    {% elif risque.couleur == 'orange' %}text-orange-400
+                    {% else %}text-green-500{% endif %}">
+                    {{ risque.score }}<span class="text-2xl">/100</span>
+                </div>
+                <div>
+                    <span class="inline-block px-3 py-1 rounded-full text-sm font-semibold
+                        {% if risque.couleur == 'red' %}bg-red-100 text-red-700
+                        {% elif risque.couleur == 'orange' %}bg-orange-100 text-orange-700
+                        {% else %}bg-green-100 text-green-700{% endif %}">
+                        Risque {{ risque.niveau }}
+                    </span>
+                </div>
+            </div>
+
+            <ul class="mt-6 space-y-2">
+                {% for type, message in risque.signaux %}
+                <li class="flex items-start gap-2 text-sm">
+                    {% if type == "danger" %}
+                        <span class="text-red-500 mt-0.5">✗</span>
+                        <span class="text-red-700">{{ message }}</span>
+                    {% elif type == "warning" %}
+                        <span class="text-orange-400 mt-0.5">⚠</span>
+                        <span class="text-orange-700">{{ message }}</span>
+                    {% else %}
+                        <span class="text-green-500 mt-0.5">✓</span>
+                        <span class="text-green-700">{{ message }}</span>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- Annonces BODACC -->
+        <div class="bg-white rounded-xl border border-gray-200 p-6 mb-6">
+            <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-4">Annonces BODACC</h3>
+
+            {% if bodacc.erreur %}
+                <p class="text-sm text-orange-600">Données BODACC indisponibles ({{ bodacc.erreur }})</p>
+
+            {% elif bodacc.annonces %}
+                <ul class="space-y-3">
+                {% for annonce in bodacc.annonces[:5] %}
+                    <li class="border-l-4 pl-3 text-sm
+                        {% if annonce.familleavis_lib and 'collectives' in annonce.familleavis_lib|lower %}
+                            border-red-400
+                        {% elif annonce.familleavis_lib and ('dissolution' in annonce.familleavis_lib|lower or 'radiation' in annonce.familleavis_lib|lower) %}
+                            border-orange-400
+                        {% else %}
+                            border-gray-300
+                        {% endif %}">
+                        <p class="font-medium text-gray-800">
+                            {{ annonce.familleavis_lib or annonce.typeavis_lib or "Annonce" }}
+                            {% if annonce.typeavis_lib and annonce.typeavis_lib != annonce.familleavis_lib %}
+                             — {{ annonce.typeavis_lib }}
+                            {% endif %}
+                        </p>
+                        <p class="text-gray-500 text-xs mt-0.5">
+                            Publié le {{ annonce.dateparution or "—" }}
+                            {% if annonce.tribunal %} · {{ annonce.tribunal }}{% endif %}
+                        </p>
+                    </li>
+                {% endfor %}
+                </ul>
+
+                {% if bodacc.annonces|length > 5 %}
+                <p class="text-xs text-gray-400 mt-3">
+                    {{ bodacc.annonces|length - 5 }} annonce(s) supplémentaire(s) non affichée(s)
+                </p>
+                {% endif %}
+
+            {% else %}
+                <p class="text-sm text-green-600">Aucune annonce BODACC trouvée pour ce SIREN</p>
+            {% endif %}
+
+            <a href="https://www.bodacc.fr/pages/annonces-commerciales/#soul-tabs=1&q={{ entreprise.siren }}"
+               target="_blank"
+               class="inline-block mt-4 text-xs text-blue-500 hover:underline">
+                Voir toutes les annonces sur BODACC.fr →
+            </a>
+        </div>
+
+        <!-- Informations générales -->
+        <div class="bg-white rounded-xl border border-gray-200 p-6 mb-6">
+            <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-4">Informations générales</h3>
+
+            <dl class="space-y-3 text-sm">
+                <div class="flex justify-between">
+                    <dt class="text-gray-500">Forme juridique</dt>
+                    <dd class="text-gray-800 font-medium">{{ nature_juridique }}</dd>
+                </div>
+                <div class="flex justify-between">
+                    <dt class="text-gray-500">Date de création</dt>
+                    <dd class="text-gray-800 font-medium">{{ entreprise.date_creation or "—" }}</dd>
+                </div>
+                <div class="flex justify-between">
+                    <dt class="text-gray-500">Activité (NAF)</dt>
+                    <dd class="text-gray-800 font-medium">
+                        {{ entreprise.activite_principale or "—" }}
+                        {% if entreprise.libelle_activite_principale %}
+                         — {{ entreprise.libelle_activite_principale }}
+                        {% endif %}
+                    </dd>
+                </div>
+                <div class="flex justify-between">
+                    <dt class="text-gray-500">Tranche effectif</dt>
+                    <dd class="text-gray-800 font-medium">{{ entreprise.tranche_effectif_salarie or "Non renseigné" }}</dd>
+                </div>
+                <div class="flex justify-between">
+                    <dt class="text-gray-500">Statut</dt>
+                    <dd class="font-medium
+                        {% if entreprise.etat_administratif == 'A' %}text-green-600{% else %}text-red-600{% endif %}">
+                        {% if entreprise.etat_administratif == 'A' %}Active{% else %}Cessée{% endif %}
+                    </dd>
+                </div>
+            </dl>
+        </div>
+
+        <!-- Siège social -->
+        {% if entreprise.siege %}
+        <div class="bg-white rounded-xl border border-gray-200 p-6 mb-6">
+            <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-4">Siège social</h3>
+            <p class="text-sm text-gray-800">
+                {{ entreprise.siege.adresse or "Adresse non disponible" }}
+            </p>
+        </div>
+        {% endif %}
+
+        <!-- Footer -->
+        <p class="text-center text-xs text-gray-400 mt-6">
+            Rapport généré le {{ date_rapport }} ·
+            Données issues de
+            <a href="https://recherche-entreprises.api.gouv.fr" class="underline" target="_blank">data.gouv.fr</a>
+            et <a href="https://www.bodacc.fr" class="underline" target="_blank">BODACC</a>
+            — 100% publiques
+        </p>
+
+    </div>
+
+</body>
+</html>

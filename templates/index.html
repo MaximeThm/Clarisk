@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clarisk — Rapport de risque entreprise</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center">
+
+    <div class="w-full max-w-xl px-4">
+
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-bold text-gray-900">Clarisk</h1>
+            <p class="text-gray-500 mt-2">Rapport de risque entreprise en quelques secondes</p>
+        </div>
+
+        <form action="/resultats" method="get" class="flex gap-2">
+            <input
+                type="text"
+                name="q"
+                placeholder="Nom d'entreprise, SIRET ou SIREN…"
+                class="flex-1 border border-gray-300 rounded-lg px-4 py-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                autofocus
+            />
+            <button
+                type="submit"
+                class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg transition"
+            >
+                Analyser
+            </button>
+        </form>
+
+        {% if erreur %}
+        <p class="mt-4 text-red-500 text-sm text-center">{{ erreur }}</p>
+        {% endif %}
+
+        <p class="text-center text-xs text-gray-400 mt-8">
+            Données issues de <a href="https://recherche-entreprises.api.gouv.fr" class="underline" target="_blank">data.gouv.fr</a> — 100% publiques
+        </p>
+
+    </div>
+
+</body>
+</html>
