@@ -40,6 +40,14 @@
         </div>
     </div>
 
+    <!-- Bannière erreur DB -->
+    {% if stats.erreur %}
+    <div class="mb-6 bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-700">
+        ⚠ Base de données inaccessible — vérifie la variable <code class="font-mono bg-red-100 px-1 rounded">DATABASE_URL</code> sur Render.<br>
+        <span class="text-xs text-red-400 mt-1 block">{{ stats.erreur }}</span>
+    </div>
+    {% endif %}
+
     <!-- KPIs -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         <div class="stat-card">

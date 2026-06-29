@@ -131,4 +131,15 @@ def get_stats() -> dict:
         }
     except Exception as e:
         print(f"Erreur lecture stats : {e}")
-        return {}
+        return {
+            "total": 0,
+            "uniques": 0,
+            "aujourd_hui": 0,
+            "cette_semaine": 0,
+            "routes": [],
+            "pays": [],
+            "devices": [],
+            "browsers": [],
+            "par_jour": [],
+            "erreur": str(e),
+        }
