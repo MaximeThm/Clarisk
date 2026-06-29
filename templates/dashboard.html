@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clarisk — Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .stat-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            transition: box-shadow 0.15s;
+        }
+        .stat-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+        .bar-bg { background: #f3f4f6; border-radius: 4px; height: 8px; }
+        .bar-fill { background: #2563eb; border-radius: 4px; height: 8px; transition: width 0.6s ease; }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+<div class="max-w-5xl mx-auto px-4 py-10">
+
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-10">
+        <div>
+            <a href="/" class="text-blue-600 font-bold text-xl">Clarisk</a>
+            <span class="text-gray-300 mx-2">·</span>
+            <span class="text-gray-500 text-sm font-medium">Dashboard analytics</span>
+        </div>
+        <div class="flex items-center gap-3">
+            <span class="text-xs text-gray-400">Données en temps réel</span>
+            <span class="inline-block w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+            <a href="/dashboard/logout" class="text-xs text-gray-400 hover:text-red-500 transition">Déconnexion →</a>
+        </div>
+    </div>
+
+    <!-- KPIs -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div class="stat-card">
+            <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Aujourd'hui</p>
+            <p class="mono text-3xl font-semibold text-gray-900">{{ stats.aujourd_hui }}</p>
+            <p class="text-xs text-gray-400 mt-1">visites</p>
+        </div>
+        <div class="stat-card">
+            <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">7 derniers jours</p>
+            <p class="mono text-3xl font-semibold text-gray-900">{{ stats.cette_semaine }}</p>
+            <p class="text-xs text-gray-400 mt-1">visites</p>
+        </div>
+        <div class="stat-card">
+            <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Total visites</p>
+            <p class="mono text-3xl font-semibold text-blue-600">{{ stats.total }}</p>
+            <p class="text-xs text-gray-400 mt-1">depuis le début</p>
+        </div>
+        <div class="stat-card">
+            <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Visiteurs uniques</p>
+            <p class="mono text-3xl font-semibold text-gray-900">{{ stats.uniques }}</p>
+            <p class="text-xs text-gray-400 mt-1">IPs distinctes</p>
+        </div>
+    </div>
+
+    <!-- Graphe visites par jour -->
+    <div class="stat-card mb-8">
+        <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-4">Visites — 30 derniers jours</h3>
+        <div style="height: 200px;">
+            <canvas id="chartJour"></canvas>
+        </div>
+    </div>
+
+    <!-- Grille routes + pays -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+
+        <!-- Pages les plus vues -->
+        <div class="stat-card">
+            <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-4">Pages les plus visitées</h3>
+            {% if stats.routes %}
+            {% set max_route = stats.routes[0].count %}
+            <ul class="space-y-3">
+                {% for r in stats.routes %}
+                <li>
+                    <div class="flex justify-between text-sm mb-1">
+                        <span class="mono text-gray-700 truncate">{{ r.route }}</span>
+                        <span class="text-gray-500 shrink-0 ml-2">{{ r.count }}</span>
+                    </div>
+                    <div class="bar-bg">
+                        <div class="bar-fill" style="width: {{ (r.count / max_route * 100)|int }}%"></div>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p class="text-sm text-gray-400">Aucune donnée</p>
+            {% endif %}
+        </div>
+
+        <!-- Pays -->
+        <div class="stat-card">
+            <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-4">Pays</h3>
+            {% if stats.pays %}
+            {% set max_pays = stats.pays[0].count %}
+            <ul class="space-y-3">
+                {% for p in stats.pays %}
+                <li>
+                    <div class="flex justify-between text-sm mb-1">
+                        <span class="text-gray-700">{{ p.country }}</span>
+                        <span class="text-gray-500">{{ p.count }}</span>
+                    </div>
+                    <div class="bar-bg">
+                        <div class="bar-fill" style="width: {{ (p.count / max_pays * 100)|int }}%; background: #7c3aed;"></div>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p class="text-sm text-gray-400">Aucune donnée</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Grille devices + navigateurs -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+
+        <!-- Appareils -->
+        <div class="stat-card">
+            <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-4">Appareils</h3>
+            {% if stats.devices %}
+            <div style="height: 180px;">
+                <canvas id="chartDevices"></canvas>
+            </div>
+            {% else %}
+            <p class="text-sm text-gray-400">Aucune donnée</p>
+            {% endif %}
+        </div>
+
+        <!-- Navigateurs -->
+        <div class="stat-card">
+            <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-4">Navigateurs</h3>
+            {% if stats.browsers %}
+            <div style="height: 180px;">
+                <canvas id="chartBrowsers"></canvas>
+            </div>
+            {% else %}
+            <p class="text-sm text-gray-400">Aucune donnée</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <p class="text-center text-xs text-gray-300">
+        Clarisk Analytics · Données issues de ta propre base PostgreSQL
+    </p>
+
+</div>
+
+<script>
+    // Données injectées par Flask
+    const parJour = {{ stats.par_jour | tojson }};
+    const devices = {{ stats.devices | tojson }};
+    const browsers = {{ stats.browsers | tojson }};
+
+    // Graphe par jour
+    new Chart(document.getElementById('chartJour'), {
+        type: 'bar',
+        data: {
+            labels: parJour.map(d => d.day),
+            datasets: [{
+                data: parJour.map(d => d.count),
+                backgroundColor: '#2563eb',
+                borderRadius: 4,
+                borderSkipped: false,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                x: { grid: { display: false }, ticks: { font: { size: 10 }, color: '#9ca3af' } },
+                y: { grid: { color: '#f3f4f6' }, ticks: { font: { size: 10 }, color: '#9ca3af', stepSize: 1 } }
+            }
+        }
+    });
+
+    const PALETTE = ['#2563eb','#7c3aed','#059669','#d97706','#dc2626','#0891b2'];
+
+    // Graphe appareils
+    if (devices.length) {
+        new Chart(document.getElementById('chartDevices'), {
+            type: 'doughnut',
+            data: {
+                labels: devices.map(d => d.device),
+                datasets: [{ data: devices.map(d => d.count), backgroundColor: PALETTE, borderWidth: 0 }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'right', labels: { font: { size: 12 }, color: '#4b5563', boxWidth: 12 } } }
+            }
+        });
+    }
+
+    // Graphe navigateurs
+    if (browsers.length) {
+        new Chart(document.getElementById('chartBrowsers'), {
+            type: 'doughnut',
+            data: {
+                labels: browsers.map(b => b.browser),
+                datasets: [{ data: browsers.map(b => b.count), backgroundColor: PALETTE, borderWidth: 0 }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'right', labels: { font: { size: 12 }, color: '#4b5563', boxWidth: 12 } } }
+            }
+        });
+    }
+</script>
+
+</body>
+</html>
