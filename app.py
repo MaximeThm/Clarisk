@@ -27,6 +27,9 @@ NATURE_JURIDIQUE = {
     "9220": "Collectivité territoriale",
 }
 
+@app.before_request
+def log_request():
+    print(f"{request.method} {request.path} — {request.remote_addr}")
 
 @app.errorhandler(404)
 def page_non_trouvee(e):
