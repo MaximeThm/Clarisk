@@ -50,10 +50,17 @@ with app.app_context():
 # -------------------------------------------------------
 # Middleware : enregistrement des visites
 # -------------------------------------------------------
+BOTS = ("bot", "crawler", "spider", "curl", "wget", "python-requests",
+        "googlebot", "bingbot", "slurp", "duckduckbot", "facebookexternalhit")
+
 @app.before_request
 def tracker_visite():
     route = request.path
     if route in ROUTES_IGNOREES or route.startswith("/static"):
+        return
+
+    # Ne pas compter le propriétaire connecté au dashboard
+    if session.get("dashboard_ok"):
         return
 
     # IP réelle (derrière un proxy Render)
@@ -62,6 +69,10 @@ def tracker_visite():
         ip = ip.split(",")[0].strip()
 
     ua = request.headers.get("User-Agent", "")
+
+    # Ne pas compter les bots
+    if any(bot in ua.lower() for bot in BOTS):
+        return
     country = get_country(ip)
     device = parse_device(ua)
     browser = parse_browser(ua)
