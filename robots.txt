@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /dashboard
+Disallow: /dashboard/login
+Disallow: /dashboard/logout
+
+Sitemap: https://clarisk.fr/sitemap.xml

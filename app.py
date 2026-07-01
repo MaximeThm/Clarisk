@@ -9,12 +9,13 @@ from services.analytics import init_db, enregistrer_visite, get_stats
 from services.geo import get_country, parse_device, parse_browser
 
 app = Flask(__name__)
-app.secret_key = os.environ.get("SECRET_KEY", "changez-moi-en-prod")
+app.secret_key = os.environ.get("SECRET_KEY")
 
-DASHBOARD_PASSWORD = os.environ.get("DASHBOARD_PASSWORD", "clarisk2024")
+DASHBOARD_PASSWORD = os.environ.get("DASHBOARD_PASSWORD")
 
 # Routes à ne PAS tracer (dashboard, assets, etc.)
-ROUTES_IGNOREES = {"/dashboard", "/dashboard/login", "/dashboard/logout", "/favicon.ico"}
+ROUTES_IGNOREES = {"/dashboard", "/dashboard/login", "/dashboard/logout", "/favicon.ico",
+                    "/mentions-legales", "/cgu", "/confidentialite"}
 
 NATURE_JURIDIQUE = {
     "1000": "Entrepreneur individuel",
@@ -98,7 +99,6 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated
 
-
 @app.route("/dashboard/login", methods=["GET", "POST"])
 def dashboard_login():
     if request.method == "POST":
@@ -121,7 +121,19 @@ def dashboard():
     stats = get_stats()
     return render_template("dashboard.html", stats=stats)
 
+from datetime import date as date_cls
 
+@app.route("/mentions-legales")
+def mentions_legales():
+    return render_template("mentions-legales.html", date_maj=date_cls.today().strftime("%d/%m/%Y"))
+
+@app.route("/cgu")
+def cgu():
+    return render_template("cgu.html", date_maj=date_cls.today().strftime("%d/%m/%Y"))
+
+@app.route("/confidentialite")
+def confidentialite():
+    return render_template("confidentialite.html", date_maj=date_cls.today().strftime("%d/%m/%Y"))
 # -------------------------------------------------------
 # Gestionnaires d'erreurs
 # -------------------------------------------------------

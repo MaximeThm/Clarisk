@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clarisk — Mentions légales</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+    <div class="max-w-2xl mx-auto px-4 py-10">
+
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-8">
+            <a href="/" class="text-blue-600 font-bold text-xl">Clarisk</a>
+            <a href="/" class="text-sm text-gray-500 hover:underline">← Accueil</a>
+        </div>
+
+        <h1 class="text-2xl font-bold text-gray-900 mb-8">Mentions légales</h1>
+
+        <div class="bg-white rounded-xl border border-gray-200 p-6 mb-6 space-y-3 text-sm text-gray-700">
+            <h2 class="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-2">Éditeur du site</h2>
+            <p>
+                Le site Clarisk est édité, à titre non professionnel, par <strong>Maxime Thomas</strong>, personne physique.
+            </p>
+            <p>
+                Conformément à l'article 6-III-1 de la loi n° 2004-575 du 21 juin 2004 pour la confiance dans
+                l'économie numérique (LCEN), l'éditeur étant une personne physique n'agissant pas à titre
+                professionnel, ses coordonnées complètes (nom et adresse) ne sont pas rendues publiques
+                mais ont été communiquées à l'hébergeur du site.
+            </p>
+            <p>
+                Contact : <a href="mailto:[email protected]" class="text-blue-600 hover:underline">[email protected]</a>
+                <span class="text-gray-400">(à remplacer par votre adresse définitive)</span>
+            </p>
+            <p>
+                Directeur de la publication : Maxime Thomas.
+            </p>
+        </div>
+
+        <div class="bg-white rounded-xl border border-gray-200 p-6 mb-6 space-y-3 text-sm text-gray-700">
+            <h2 class="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-2">Hébergement</h2>
+            <p>
+                Le site Clarisk est hébergé par :<br>
+                <strong>Render Services, Inc.</strong><br>
+                525 Brannan St, Ste 300<br>
+                San Francisco, CA 94107<br>
+                États-Unis<br>
+                <a href="https://render.com" class="text-blue-600 hover:underline" target="_blank">render.com</a>
+            </p>
+        </div>
+
+        <div class="bg-white rounded-xl border border-gray-200 p-6 mb-6 space-y-3 text-sm text-gray-700">
+            <h2 class="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-2">Propriété intellectuelle</h2>
+            <p>
+                L'ensemble des éléments techniques, graphiques et textuels propres au site Clarisk (hors
+                données publiques réutilisées, voir ci-dessous) est protégé par le droit d'auteur. Toute
+                reproduction non autorisée est susceptible de constituer une contrefaçon.
+            </p>
+        </div>
+
+        <div class="bg-white rounded-xl border border-gray-200 p-6 mb-6 space-y-3 text-sm text-gray-700">
+            <h2 class="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-2">Sources de données</h2>
+            <p>
+                Les informations affichées sur Clarisk proviennent de jeux de données publics et ouverts,
+                notamment :
+            </p>
+            <ul class="list-disc list-inside space-y-1">
+                <li>
+                    <a href="https://recherche-entreprises.api.gouv.fr" class="text-blue-600 hover:underline" target="_blank">
+                        recherche-entreprises.api.gouv.fr</a> (API publique de l'État français)
+                </li>
+                <li>
+                    <a href="https://www.bodacc.fr" class="text-blue-600 hover:underline" target="_blank">
+                        BODACC</a> — Bulletin officiel des annonces civiles et commerciales
+                </li>
+            </ul>
+            <p>
+                Clarisk n'est ni éditeur ni responsable de ces données sources. Voir les
+                <a href="/cgu" class="text-blue-600 hover:underline">CGU</a> pour les conditions d'utilisation
+                du service et les limites de responsabilité associées.
+            </p>
+        </div>
+
+        <p class="text-center text-xs text-gray-400 mt-6">
+            Dernière mise à jour : {{ date_maj }}
+        </p>
+
+    </div>
+
+</body>
+</html>

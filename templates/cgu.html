@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clarisk — Conditions Générales d'Utilisation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+    <div class="max-w-2xl mx-auto px-4 py-10">
+
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-8">
+            <a href="/" class="text-blue-600 font-bold text-xl">Clarisk</a>
+            <a href="/" class="text-sm text-gray-500 hover:underline">← Accueil</a>
+        </div>
+
+        <h1 class="text-2xl font-bold text-gray-900 mb-8">Conditions Générales d'Utilisation</h1>
+
+        <div class="bg-white rounded-xl border border-gray-200 p-6 mb-6 space-y-3 text-sm text-gray-700">
+            <h2 class="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-2">1. Objet</h2>
+            <p>
+                Les présentes CGU définissent les conditions d'accès et d'utilisation du site Clarisk,
+                service gratuit permettant de consulter des informations publiques sur des entreprises
+                françaises et un score de risque calculé automatiquement à partir de ces informations.
+            </p>
+            <p>
+                L'utilisation du site implique l'acceptation pleine et entière des présentes CGU.
+            </p>
+        </div>
+
+        <div class="bg-white rounded-xl border border-red-200 p-6 mb-6 space-y-3 text-sm text-gray-700">
+            <h2 class="text-sm font-semibold text-red-500 uppercase tracking-wide mb-2">2. Nature indicative du score de risque</h2>
+            <p>
+                Le score de risque et les signaux affichés par Clarisk sont générés automatiquement à
+                partir de règles de calcul appliquées à des données publiques (data.gouv.fr, BODACC).
+                Ils sont fournis <strong>à titre purement informatif et indicatif</strong>.
+            </p>
+            <p>
+                Ce score :
+            </p>
+            <ul class="list-disc list-inside space-y-1">
+                <li>ne constitue en aucun cas un avis juridique, financier, comptable ou professionnel ;</li>
+                <li>ne saurait se substituer à une vérification approfondie (Kbis, comptes annuels, etc.) ni à l'avis d'un professionnel qualifié ;</li>
+                <li>peut être incomplet, erroné ou obsolète, notamment en raison de délais de publication ou d'indisponibilité des données sources ;</li>
+                <li>ne préjuge en rien de la solvabilité, de la fiabilité ou de l'honnêteté réelle de l'entreprise concernée.</li>
+            </ul>
+            <p>
+                L'utilisateur reste seul responsable des décisions (commerciales, contractuelles ou autres)
+                qu'il prend sur la base des informations fournies par Clarisk.
+            </p>
+        </div>
+
+        <div class="bg-white rounded-xl border border-gray-200 p-6 mb-6 space-y-3 text-sm text-gray-700">
+            <h2 class="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-2">3. Disponibilité et fiabilité des données</h2>
+            <p>
+                Clarisk s'appuie sur des API publiques tierces (API Recherche d'entreprises, BODACC) dont
+                il ne maîtrise ni la disponibilité, ni l'exhaustivité, ni l'exactitude. Clarisk ne garantit
+                pas un accès continu au service ni l'absence d'erreurs.
+            </p>
+        </div>
+
+        <div class="bg-white rounded-xl border border-gray-200 p-6 mb-6 space-y-3 text-sm text-gray-700">
+            <h2 class="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-2">4. Limitation de responsabilité</h2>
+            <p>
+                Dans les limites autorisées par la loi, l'éditeur de Clarisk ne pourra être tenu responsable
+                des dommages directs ou indirects résultant de l'utilisation du site, de l'impossibilité d'y
+                accéder, ou de décisions prises sur la base des informations qui y sont présentées.
+            </p>
+        </div>
+
+        <div class="bg-white rounded-xl border border-gray-200 p-6 mb-6 space-y-3 text-sm text-gray-700">
+            <h2 class="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-2">5. Usage autorisé</h2>
+            <p>
+                L'utilisateur s'engage à ne pas utiliser Clarisk à des fins illégales, notamment pour
+                harceler, diffamer ou nuire à une entreprise ou une personne, ni à extraire massivement
+                (scraping automatisé) les données du site sans autorisation préalable.
+            </p>
+        </div>
+
+        <div class="bg-white rounded-xl border border-gray-200 p-6 mb-6 space-y-3 text-sm text-gray-700">
+            <h2 class="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-2">6. Évolution des CGU</h2>
+            <p>
+                Ces CGU peuvent être modifiées à tout moment. La version applicable est celle en ligne au
+                moment de l'utilisation du site.
+            </p>
+        </div>
+
+        <p class="text-center text-xs text-gray-400 mt-6">
+            Dernière mise à jour : {{ date_maj }} · Voir aussi les
+            <a href="/confidentialite" class="underline">données personnelles</a> et les
+            <a href="/mentions-legales" class="underline">mentions légales</a>.
+        </p>
+
+    </div>
+
+</body>
+</html>
