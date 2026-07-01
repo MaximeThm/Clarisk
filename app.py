@@ -1,5 +1,6 @@
 import os
 from datetime import date
+from datetime import date as date_cls
 from functools import wraps
 from flask import Flask, render_template, request, session, redirect, url_for
 from services.entreprise import rechercher_entreprises, rechercher_entreprise_par_siren
@@ -7,6 +8,7 @@ from services.bodacc import recuperer_annonces_bodacc
 from services.risque import calculer_score_risque
 from services.analytics import init_db, enregistrer_visite, get_stats
 from services.geo import get_country, parse_device, parse_browser
+from flask import send_from_directory
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY")
@@ -15,7 +17,7 @@ DASHBOARD_PASSWORD = os.environ.get("DASHBOARD_PASSWORD")
 
 # Routes à ne PAS tracer (dashboard, assets, etc.)
 ROUTES_IGNOREES = {"/dashboard", "/dashboard/login", "/dashboard/logout", "/favicon.ico",
-                    "/mentions-legales", "/cgu", "/confidentialite"}
+                    "/mentions-legales", "/cgu", "/confidentialite", "/robots.txt", "/sitemap.xml"}
 
 NATURE_JURIDIQUE = {
     "1000": "Entrepreneur individuel",
@@ -121,8 +123,6 @@ def dashboard():
     stats = get_stats()
     return render_template("dashboard.html", stats=stats)
 
-from datetime import date as date_cls
-
 @app.route("/mentions-legales")
 def mentions_legales():
     return render_template("mentions-legales.html", date_maj=date_cls.today().strftime("%d/%m/%Y"))
@@ -134,6 +134,15 @@ def cgu():
 @app.route("/confidentialite")
 def confidentialite():
     return render_template("confidentialite.html", date_maj=date_cls.today().strftime("%d/%m/%Y"))
+
+@app.route("/robots.txt")
+def robots_txt():
+    return send_from_directory(app.root_path, "robots.txt", mimetype="text/plain")
+
+@app.route("/sitemap.xml")
+def sitemap_xml():
+    return send_from_directory(app.root_path, "sitemap.xml", mimetype="application/xml")
+
 # -------------------------------------------------------
 # Gestionnaires d'erreurs
 # -------------------------------------------------------
